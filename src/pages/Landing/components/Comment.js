@@ -1,13 +1,24 @@
 import moment from "moment";
-import React from "react";
+import React, { useState } from "react";
 import { v4 } from "uuid";
+import Modal from "./Modal";
 
-const Comment = ({ comments }) => {
+const Comment = ({ comments, callback }) => {
+  const [showModal, setShowModal] = useState(false);
+  const [parentId, setParentId] = useState(null);
+
   return (
     <div className="col-md-12 ">
+      <Modal
+        show={showModal}
+        title="Add Comment"
+        callback={callback}
+        callbackShow={setShowModal}
+        parentId={parentId}
+      />
       <div className="row">
         <div className="col-md-12">
-          <ul>
+          <ul className="m-0">
             {comments.map((layer1) => {
               return (
                 <li
@@ -24,6 +35,18 @@ const Comment = ({ comments }) => {
                       </h6>
                       <p className="card-text">{layer1.comment}</p>
                     </div>
+                    <div className="card-footer">
+                      <button
+                        type="button"
+                        className="btn btn-info text-white font-weight-bold"
+                        onClick={() => {
+                          setParentId(layer1.id);
+                          setShowModal(true);
+                        }}
+                      >
+                        Reply
+                      </button>
+                    </div>
                   </div>
                   {layer1 && layer1.comments && layer1.comments.length !== 0 ? (
                     layer1.comments.map((layer2) => {
@@ -39,6 +62,18 @@ const Comment = ({ comments }) => {
                                   )}
                                 </h6>
                                 <p className="card-text">{layer2.comment}</p>
+                              </div>
+                              <div className="card-footer">
+                                <button
+                                  type="button"
+                                  className="btn btn-info text-white font-weight-bold"
+                                  onClick={() => {
+                                    setParentId(layer2.id);
+                                    setShowModal(true);
+                                  }}
+                                >
+                                  Reply
+                                </button>
                               </div>
                             </div>
                             {layer2 &&
